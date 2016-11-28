@@ -38,13 +38,26 @@ namespace hitomi
             }
         }
 
+        public void Download(string path)
+        {
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+            int i = 1;
+            foreach(var img in this)
+            {
+                img.Save(i.ToString() + ".png", System.Drawing.Imaging.ImageFormat.Png);
+                i++;
+            }
+        }
+
         public IEnumerator<Image> GetEnumerator()
             => new MangaEnumerator(this);
 
         IEnumerator IEnumerable.GetEnumerator()
             => GetEnumerator();
 
-        public class MangaEnumerator : IEnumerator<Image>
+        private class MangaEnumerator : IEnumerator<Image>
         {
             private Manga _manga;
             private int _current;
