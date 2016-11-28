@@ -14,6 +14,22 @@ namespace hitomi
         public Form1()
         {
             InitializeComponent();
+            LoadPage(null);
         }
+
+        public void LoadPage(Page page)
+        {
+            ImageList imgs = new ImageList();
+            imgs.ImageSize = new Size(140/3, 220/3);
+
+            if (page != null)
+            {
+                foreach (Manga m in page.Mangas)
+                {
+                    imgs.Images.Add(m.First());
+                }
+            }
+            this.cListView1.SmallImageList = imgs;
+        } 
     }
 }
