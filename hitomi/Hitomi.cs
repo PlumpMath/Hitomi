@@ -16,7 +16,7 @@ namespace hitomi
 
         public int Pages { get; private set; }
 
-        public Hitomi(string artist = "", string series = "", string type = "", string language = "", string tag = "")
+        private Hitomi(string artist = "", string series = "", string type = "", string language = "", string tag = "")
         {
             Artist = artist;
             Series = series;
@@ -32,9 +32,9 @@ namespace hitomi
             return new Page(this, page);
         }
 
-        protected static string GetUrl(string artist = "", string series = "", string type = "", string language = "", string tag = "", int page = 1)
+        public static Hitomi FromArtist(string artist)
         {
-            throw new NotImplementedException();
+            return new Hitomi(artist: artist);
         }
     }
 }

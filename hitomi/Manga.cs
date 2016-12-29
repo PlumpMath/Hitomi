@@ -5,12 +5,21 @@ using System.Linq;
 using System.Drawing;
 using System.Net;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace hitomi
 {
-    public class Manga : IEnumerable<Image>
+    public class Manga
     {
         public string Url { get; private set; }
+        public string Number
+        {
+            get
+            {
+                var u = Url.Split('.');
+                return u[u.Length - 2].Split('/').Last();
+            }
+        }
 
         public string Artist { get; private set; }
         public string Series { get; private set; }
@@ -20,7 +29,7 @@ namespace hitomi
 
         public int Length { get; private set; }
 
-        private string[] _imageUrls;
+        private List<string> _images;
 
         public Manga(string url)
         {
@@ -30,80 +39,46 @@ namespace hitomi
 
         private void InitializeInfo()
         {
+            _images = new List<string>();
             using (WebClient client = new WebClient())
             {
-                string data = client.DownloadString(Url);
-
-                // TODO: 파싱해서 프로퍼티 값 설정하기
+                string data = client.DownloadString(Url.Replace(".html", ".js")).Replace(",", "," + Environment.NewLine);
+                Regex r = new Regex("[0-9]*\\.[png|jpg]..");
+                var c = r.Matches(data);
+                foreach(Match m in c)
+                {
+                    foreach(Capture cap in m.Captures)
+                    {
+                        _images.Add(cap.Value);
+                    }
+                }
             }
         }
 
+        public IEnumerable<Image> GetImages()
+        {
+            foreach (var s in _images)
+            {
+                var request = WebRequest.Create($"https://g.hitomi.la/galleries/{Number}/{s}");
+
+                using (var response = request.GetResponse())
+                using (var stream = response.GetResponseStream())
+                {
+                    yield return Image.FromStream(stream);
+                }
+            }
+        }
+       
         public void Download(string path)
         {
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
 
-            int i = 1;
-            foreach(var img in this)
+            using (WebClient client = new WebClient())
             {
-                img.Save(i.ToString() + ".png", System.Drawing.Imaging.ImageFormat.Png);
-                i++;
-            }
-        }
-
-        public IEnumerator<Image> GetEnumerator()
-            => new MangaEnumerator(this);
-
-        IEnumerator IEnumerable.GetEnumerator()
-            => GetEnumerator();
-
-        private class MangaEnumerator : IEnumerator<Image>
-        {
-            private Manga _manga;
-            private int _current;
-            private WebClient _client;
-            public MangaEnumerator(Manga manga)
-            {
-                _manga = manga;
-                _current = -1;
-                _client = new WebClient();
-            }
-
-            public bool MoveNext()
-            {
-                if(_current < _manga.Length - 1)
+                foreach (var s in _images)
                 {
-                    _current++;
-                    return true;
-                }
-                return false;
-            }
-
-            public void Reset()
-            {
-                _current = -1;
-            }
-
-            public void Dispose()
-            {
-                _client.Dispose();
-            }
-
-            object IEnumerator.Current
-                => Current;
-
-            public Image Current
-            {
-                get
-                {
-                    if (_current == -1)
-                        return null;
-
-                    var data = _client.DownloadData(_manga._imageUrls[_current]);
-                    using (var m = new MemoryStream())
-                    {
-                        return Image.FromStream(m);
-                    }
+                    client.DownloadFile($"https://ba.hitomi.la/galleries/{Number}/{s}", Path.Combine(path, s));
                 }
             }
         }

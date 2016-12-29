@@ -13,9 +13,16 @@ namespace hitomi
         [STAThread]
         static void Main()
         {
+
+#if DEBUG
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new Downloader());
+#else
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
+#endif
         }
     }
 }

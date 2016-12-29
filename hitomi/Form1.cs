@@ -26,7 +26,7 @@ namespace hitomi
             {
                 foreach (Manga m in page.Mangas)
                 {
-                    imgs.Images.Add(m.First());
+                    //imgs.Images.Add(m.First());
                 }
             }
             this.cListView1.SmallImageList = imgs;
