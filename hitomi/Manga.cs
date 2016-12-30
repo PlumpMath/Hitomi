@@ -43,13 +43,13 @@ namespace hitomi
             using (WebClient client = new WebClient())
             {
                 string data = client.DownloadString(Url.Replace(".html", ".js")).Replace(",", "," + Environment.NewLine);
-                Regex r = new Regex("[0-9]*\\.[png|jpg]..");
+                Regex r = new Regex("(?<=\")[\\w.]+[jpg|png](?=\")");
                 var c = r.Matches(data);
                 foreach(Match m in c)
                 {
                     foreach(Capture cap in m.Captures)
                     {
-                        _images.Add(cap.Value);
+                        _images.Add(cap.Value.Split('"').Last());
                     }
                 }
             }
