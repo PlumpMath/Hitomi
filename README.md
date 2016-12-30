@@ -1,2 +1,2 @@
 # Hitomi
-Hitomi.la client
+ㅎㅌㅁ 클라이언트. 뷰어 및 다운로더임
