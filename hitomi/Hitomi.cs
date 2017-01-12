@@ -22,6 +22,14 @@ namespace hitomi
             }
         }
 
+        public static int MaxPage(string url)
+        {
+            using (WebClient client = new WebClient())
+            {
+                return Convert.ToInt32(Regex.Match(client.DownloadString(url), "(?<='.html', [0-9]*, )[0-9]*(?=\\);)").Value);
+            }
+        }
+
         public static string MakeUrl(int page = 1, string tag = null, string artist = null, string language = "all")
         {
             string type, value, lan = language;
@@ -43,9 +51,15 @@ namespace hitomi
             return $"https://hitomi.la/{type}{value}-{language}-{page}.html";
         }
 
-        public static IEnumerator<int> CrawlFromTag(string tag)
+        public static IEnumerator<int> CrawlFromTag(string tag, string language = "all")
         {
-            throw new NotImplementedException();
+            int max = MaxPage(MakeUrl(tag: tag, language: language));
+            for(int i = 1; i <= max; i++)
+            {
+                string url = MakeUrl(page: i, tag: tag, language: language);
+                foreach (int m in UrlsFromPage(url))
+                    yield return m;
+            }
         }
     }
 }

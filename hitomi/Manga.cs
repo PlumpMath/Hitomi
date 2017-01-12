@@ -33,10 +33,19 @@ namespace hitomi
 
         private List<string> _images;
 
-        public Manga(string url)
+        private Manga()
+        {
+            InitializeInfo();
+        }
+
+        public Manga(string url) : this()
         {
             Url = url;
-            InitializeInfo();
+        }
+
+        public Manga(int number) : this()
+        {
+            Url = $"https://hitomi.la/galleries/{number}.html";
         }
 
         private void InitializeInfo()
