@@ -12,6 +12,7 @@ namespace hitomi
         {
             using (WebClient client = new WebClient())
             {
+                client.Encoding = System.Text.Encoding.UTF8;
                 client.Headers.Add(HttpRequestHeader.UserAgent, "None");
                 var data = client.DownloadString(url);
                 var ms = Regex.Matches(data, "(?<=<a href=\"/galleries/)[0-9]*(?=.html\"><)");
@@ -26,6 +27,7 @@ namespace hitomi
         {
             using (WebClient client = new WebClient())
             {
+                client.Encoding = System.Text.Encoding.UTF8;
                 return Convert.ToInt32(Regex.Match(client.DownloadString(url), "(?<='.html', [0-9]*, )[0-9]*(?=\\);)").Value);
             }
         }

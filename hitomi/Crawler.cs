@@ -18,14 +18,14 @@ namespace hitomi
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string tag = textBox1.Text;
+            string tag = comboBox1.Text + textBox1.Text;
             string language = textBox2.Text;
             int num = (int)numericUpDown1.Value;
 
-            foreach(int i in Hitomi.CrawlFromTag(tag, language).Take(num))
+            foreach(int i in Hitomi.CrawlFromTag(tag, language).Skip((int)numericUpDown2.Value).Take(num))
             {
                 Manga m = new Manga(i);
-                m.Download($"{m.Name} ({i})");
+                m.Download($"Download\\{m.Name} ({i})");
             }
         }
     }

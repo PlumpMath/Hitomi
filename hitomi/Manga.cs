@@ -32,20 +32,17 @@ namespace hitomi
         public int Length => _images.Count;
 
         private List<string> _images;
-
-        private Manga()
+        
+        public Manga(string url)
         {
+            Url = url;
             InitializeInfo();
         }
 
-        public Manga(string url) : this()
-        {
-            Url = url;
-        }
-
-        public Manga(int number) : this()
+        public Manga(int number)
         {
             Url = $"https://hitomi.la/galleries/{number}.html";
+            InitializeInfo();
         }
 
         private void InitializeInfo()
@@ -53,6 +50,7 @@ namespace hitomi
             _images = new List<string>();
             using (WebClient client = new WebClient())
             {
+                client.Encoding = System.Text.Encoding.UTF8;
                 string data = client.DownloadString(Url.Replace(".html", ".js")).Replace(",", "," + Environment.NewLine);
                 Regex r = new Regex("(?<=\")[\\w.]+[jpg|png](?=\")");
                 var c = r.Matches(data);
@@ -86,10 +84,15 @@ namespace hitomi
         public void Download(string path)
         {
             if (!Directory.Exists(path))
+            {
+                foreach (char c in Path.GetInvalidPathChars())
+                    path = path.Replace(c, '_');
                 Directory.CreateDirectory(path);
+            }
 
             using (WebClient client = new WebClient())
             {
+                client.Encoding = System.Text.Encoding.UTF8;
                 client.Headers.Add(HttpRequestHeader.UserAgent, "None");
                 foreach (var s in _images)
                 {
