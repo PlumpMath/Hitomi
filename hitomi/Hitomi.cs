@@ -22,9 +22,25 @@ namespace hitomi
             }
         }
 
-        public static string MakeUrl(int page = 1, string tag = null, string artist = null, string language = null)
+        public static string MakeUrl(int page = 1, string tag = null, string artist = null, string language = "all")
         {
-            throw new NotImplementedException();
+            string type, value, lan = language;
+            if (tag != null)
+            {
+                type = "tag/";
+                value = tag;
+            }
+            else if(artist != null)
+            {
+                type = "artist/";
+                value = artist;
+            }
+            else
+            {
+                type = "";
+                value = "index";
+            }
+            return $"https://hitomi.la/{type}{value}-{language}-{page}.html";
         }
 
         public static IEnumerator<int> CrawlFromTag(string tag)
