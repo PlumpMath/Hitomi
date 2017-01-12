@@ -50,6 +50,12 @@
     <Compile Include="CListView.Designer.cs">
       <DependentUpon>CListView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Crawler.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Crawler.Designer.cs">
+      <DependentUpon>Crawler.cs</DependentUpon>
+    </Compile>
     <Compile Include="Downloader.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -57,11 +63,23 @@
       <DependentUpon>Downloader.cs</DependentUpon>
     </Compile>
     <Compile Include="Hitomi.cs" />
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Manga.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Crawler.resx">
+      <DependentUpon>Crawler.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Downloader.resx">
       <DependentUpon>Downloader.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

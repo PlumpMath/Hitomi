@@ -51,7 +51,7 @@ namespace hitomi
             return $"https://hitomi.la/{type}{value}-{language}-{page}.html";
         }
 
-        public static IEnumerator<int> CrawlFromTag(string tag, string language = "all")
+        public static IEnumerable<int> CrawlFromTag(string tag, string language = "all")
         {
             int max = MaxPage(MakeUrl(tag: tag, language: language));
             for(int i = 1; i <= max; i++)

@@ -15,7 +15,7 @@ namespace hitomi
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Downloader());
+            Application.Run(new Crawler());
         }
     }
 }
