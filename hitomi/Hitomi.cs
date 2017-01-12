@@ -1,40 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Text.RegularExpressions;
 using System.Net;
 
 namespace hitomi
 {
-    public class Hitomi
+    public static class Hitomi
     {
-        public string Artist { get; set; }
-        public string Series { get; set; }
-        public string Type { get; set; }
-        public string Language { get; set; }
-        public string Tag { get; set; }
-
-        public int Pages { get; private set; }
-
-        private Hitomi(string artist = "", string series = "", string type = "", string language = "", string tag = "")
+        private static IEnumerator<int> UrlsFromPage(string url)
         {
-            Artist = artist;
-            Series = series;
-            Type = type;
-            Language = language;
-            Tag = tag;
+            using (WebClient client = new WebClient())
+            {
+                var data = client.DownloadString(url);
+                var ms = Regex.Matches(data, "(?<=<a href=\"/galleries/)[0-9]*(?=.html\">)");
+                foreach(Match m in ms)
+                {
+                    yield return Convert.ToInt32(m.Value);
+                }
+            }
         }
 
-        public Page GetPage(int page)
+        public static IEnumerator<int> CrawlFromTag(string tag)
         {
-            if (Pages < page)
-                throw new IndexOutOfRangeException("page");
-            return new Page(this, page);
-        }
-
-        public static Hitomi FromArtist(string artist)
-        {
-            return new Hitomi(artist: artist);
+            throw new NotImplementedException();
         }
     }
 }

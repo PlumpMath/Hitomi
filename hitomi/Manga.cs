@@ -11,6 +11,7 @@ namespace hitomi
 {
     public class Manga
     {
+        public event Action<int> Downloaded;
         public string Url { get; private set; }
         public string Number
         {
@@ -21,13 +22,14 @@ namespace hitomi
             }
         }
 
+        public string Name { get; private set; }
         public string Artist { get; private set; }
         public string Series { get; private set; }
         public string Type { get; private set; }
         public string Language { get; private set; }
         public string[] Tags { get; private set; }
 
-        public int Length { get; private set; }
+        public int Length => _images.Count;
 
         private List<string> _images;
 
@@ -52,6 +54,9 @@ namespace hitomi
                         _images.Add(cap.Value.Split('"').Last());
                     }
                 }
+
+                string data2 = client.DownloadString(Url);
+                Name = Regex.Match(data2, "(?<=<title>)(.*)(?=Read Online)").Value.Trim(' ', '-');
             }
         }
 
@@ -79,6 +84,8 @@ namespace hitomi
                 foreach (var s in _images)
                 {
                     client.DownloadFile($"https://ba.hitomi.la/galleries/{Number}/{s}", Path.Combine(path, s));
+                    Downloaded?.Invoke(_images.IndexOf(s));
+                    System.Windows.Forms.Application.DoEvents();
                 }
             }
         }

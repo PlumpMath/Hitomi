@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
+using System.IO;
 
 namespace hitomi
 {
@@ -14,18 +8,17 @@ namespace hitomi
         public Downloader()
         {
             InitializeComponent();
+            CheckForIllegalCrossThreadCalls = false;
         }
 
         private void textBox1_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
-                var dialog = new FolderBrowserDialog();
-                if (dialog.ShowDialog() == DialogResult.OK)
-                {
-                    Manga m = new Manga(textBox1.Text);
-                    m.Download(dialog.SelectedPath);
-                }
+                Manga m = new Manga(textBox1.Text);
+                m.Downloaded += (i) => this.Text = $"{i}/{m.Length}";
+                m.Download(Path.Combine("Download", m.Name));
+                MessageBox.Show("끝");
             }
         }
     }
