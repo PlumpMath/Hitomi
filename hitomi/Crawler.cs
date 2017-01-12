@@ -25,7 +25,7 @@ namespace hitomi
             foreach(int i in Hitomi.CrawlFromTag(tag, language).Skip((int)numericUpDown2.Value).Take(num))
             {
                 Manga m = new Manga(i);
-                m.Download($"Download\\{m.Name} ({i})");
+                m.Download($"Download\\{i}_{m.Name}");
             }
         }
     }
