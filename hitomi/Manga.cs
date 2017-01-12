@@ -81,6 +81,7 @@ namespace hitomi
 
             using (WebClient client = new WebClient())
             {
+                client.Headers.Add(HttpRequestHeader.UserAgent, "None");
                 foreach (var s in _images)
                 {
                     client.DownloadFile($"https://ba.hitomi.la/galleries/{Number}/{s}", Path.Combine(path, s));
