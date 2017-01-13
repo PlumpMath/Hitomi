@@ -20,13 +20,30 @@ namespace hitomi
         {
             string tag = comboBox1.Text + textBox1.Text;
             string language = textBox2.Text;
-            int num = (int)numericUpDown1.Value;
-
-            foreach(int i in Hitomi.CrawlFromTag(tag, language).Skip((int)numericUpDown2.Value).Take(num))
+            int from = (int)numericUpDown2.Value;
+            int to = (int)numericUpDown1.Value;
+            IEnumerable<int> list;
+            if (comboBox2.Text == "태그")
+                list = Hitomi.CrawlFromTag(tag, language);
+            else if (comboBox2.Text == "시리즈")
+                list = Hitomi.CrawlFromSeries(tag, language);
+            else
+                list = null;
+            foreach (int i in list.Skip(from).Take(to - from))
             {
                 Manga m = new Manga(i);
                 m.Download($"Download\\{i}_{m.Name}");
             }
+        }
+
+        private void numericUpDown2_ValueChanged(object sender, EventArgs e)
+        {
+            numericUpDown1.Minimum = numericUpDown2.Value;
+        }
+
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+            numericUpDown2.Maximum = numericUpDown1.Value;
         }
     }
 }

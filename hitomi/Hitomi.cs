@@ -32,7 +32,7 @@ namespace hitomi
             }
         }
 
-        public static string MakeUrl(int page = 1, string tag = null, string artist = null, string language = "all")
+        public static string MakeUrl(int page = 1, string tag = null, string artist = null, string series = null, string language = "all")
         {
             string type, value, lan = language;
             if (tag != null)
@@ -44,6 +44,11 @@ namespace hitomi
             {
                 type = "artist/";
                 value = artist;
+            }
+            else if(series != null)
+            {
+                type = "series/";
+                value = series;
             }
             else
             {
@@ -59,6 +64,17 @@ namespace hitomi
             for(int i = 1; i <= max; i++)
             {
                 string url = MakeUrl(page: i, tag: tag, language: language);
+                foreach (int m in UrlsFromPage(url))
+                    yield return m;
+            }
+        }
+
+        public static IEnumerable<int> CrawlFromSeries(string series, string language = "all")
+        {
+            int max = MaxPage(MakeUrl(series: series, language: language));
+            for (int i = 1; i <= max; i++)
+            {
+                string url = MakeUrl(page: i, series: series, language: language);
                 foreach (int m in UrlsFromPage(url))
                     yield return m;
             }
