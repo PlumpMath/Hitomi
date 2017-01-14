@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Net;
 using System.IO;
 using System.Text.RegularExpressions;
+using HtmlAgilityPack;
 
 namespace hitomi
 {
@@ -51,20 +52,25 @@ namespace hitomi
             using (WebClient client = new WebClient())
             {
                 client.Encoding = System.Text.Encoding.UTF8;
-                string data = client.DownloadString(Url.Replace(".html", ".js")).Replace(",", "," + Environment.NewLine);
-                Regex r = new Regex("(?<=\")[\\w.]+[jpg|png](?=\")");
-                var c = r.Matches(data);
-                foreach(Match m in c)
-                {
-                    foreach(Capture cap in m.Captures)
-                    {
-                        _images.Add(cap.Value.Split('"').Last());
-                    }
-                }
-
-                string data2 = client.DownloadString(Url);
-                Name = Regex.Match(data2, "(?<=<title>)(.*)(?=Read Online)").Value.Trim(' ', '-');
+                HtmlDocument doc = new HtmlDocument();
+                doc.LoadHtml(client.DownloadString(Url));
+                doc.DocumentNode.SelectNodes("//li//a[contains('href','tag')]");
             }
+
+            /*
+            Regex r = new Regex("(?<=\")[\\w.]+[jpg|png](?=\")");
+            var c = r.Matches(data);
+            foreach (Match m in c)
+            {
+                foreach (Capture cap in m.Captures)
+                {
+                    _images.Add(cap.Value.Split('"').Last());
+                }
+            }
+
+            string data2 = client.DownloadString(Url);
+            Name = Regex.Match(data2, "(?<=<title>)(.*)(?=Read Online)").Value.Trim(' ', '-');
+            */
         }
 
         public IEnumerable<Image> GetImages()
