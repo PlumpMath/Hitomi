@@ -73,7 +73,7 @@ namespace hitomi
         {
             foreach (var s in _images)
             {
-                var request = WebRequest.Create($"https://g.hitomi.la/galleries/{Number}/{s}");
+                var request = WebRequest.Create($"https://ba.hitomi.la/galleries/{Number}/{s}");
 
                 using (var response = request.GetResponse())
                 using (var stream = response.GetResponseStream())
