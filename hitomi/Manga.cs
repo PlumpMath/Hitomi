@@ -25,14 +25,14 @@ namespace hitomi
 
         public string Name { get; private set; }
         public string Artist { get; private set; }
-        public string Series { get; private set; }
         public string Type { get; private set; }
         public string Language { get; private set; }
-        public string[] Tags { get; private set; }
+        public string Series { get; private set; }
+        public Tag[] Tags { get; private set; }
 
-        public int Length => _images.Count;
+        public int Length => _images.Length;
 
-        private List<string> _images;
+        private string[] _images;
         
         public Manga(string url)
         {
@@ -48,29 +48,25 @@ namespace hitomi
 
         private void InitializeInfo()
         {
-            _images = new List<string>();
             using (WebClient client = new WebClient())
             {
                 client.Encoding = System.Text.Encoding.UTF8;
                 HtmlDocument doc = new HtmlDocument();
                 doc.LoadHtml(client.DownloadString(Url));
-                var tags = doc.DocumentNode.SelectNodes("//ul[contains(@class, 'tags')]//li//a[contains(@href,'/tag/')]");
-            }
 
-            /*
-            Regex r = new Regex("(?<=\")[\\w.]+[jpg|png](?=\")");
-            var c = r.Matches(data);
-            foreach (Match m in c)
-            {
-                foreach (Capture cap in m.Captures)
-                {
-                    _images.Add(cap.Value.Split('"').Last());
-                }
-            }
+                Name = doc.DocumentNode.SelectSingleNode("//div[contains(@class, 'gallery')]//h1//a").InnerText;
+                Artist = doc.DocumentNode.SelectSingleNode("//div[contains(@class, 'gallery')]//h2//a").InnerText;
+                //Group = doc.DocumentNode.SelectSingleNode("//div[contains(@class, 'gallery-info')]//a[contains(@href,'/group/')]");
+                Type = doc.DocumentNode.SelectSingleNode("//div[contains(@class, 'gallery-info')]//tr[2]//a").InnerText;
+                Language = doc.DocumentNode.SelectSingleNode("//div[contains(@class, 'gallery-info')]//tr[3]//a").InnerText;
+                Series = doc.DocumentNode.SelectSingleNode("//div[contains(@class, 'gallery-info')]//tr[4]//a").InnerText;
+                Tags = (from tag in doc.DocumentNode.SelectNodes("//ul[contains(@class, 'tags')]//li//a[contains(@href,'/tag/')]")
+                        select new Tag(tag.InnerText)).ToArray();
 
-            string data2 = client.DownloadString(Url);
-            Name = Regex.Match(data2, "(?<=<title>)(.*)(?=Read Online)").Value.Trim(' ', '-');
-            */
+                string data = client.DownloadString(Url.Replace(".html", ".js")).Replace(",", "," + Environment.NewLine);
+                _images = (from Match m in Regex.Matches(data, "(?<=\")[\\w.]+[jpg|png](?=\")")
+                           select m.Value.Split('"').Last()).ToArray();
+            }
         }
 
         public IEnumerable<Image> GetImages()
@@ -100,10 +96,10 @@ namespace hitomi
             {
                 client.Encoding = System.Text.Encoding.UTF8;
                 client.Headers.Add(HttpRequestHeader.UserAgent, "None");
-                foreach (var s in _images)
+                for(int i = 0; i < _images.Length; i++)
                 {
-                    client.DownloadFile($"https://ba.hitomi.la/galleries/{Number}/{s}", Path.Combine(path, s));
-                    Downloaded?.Invoke(_images.IndexOf(s));
+                    client.DownloadFile($"https://ba.hitomi.la/galleries/{Number}/{_images[i]}", Path.Combine(path, _images[i]));
+                    Downloaded?.Invoke(i);
                     System.Windows.Forms.Application.DoEvents();
                 }
             }
