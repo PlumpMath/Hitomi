@@ -67,6 +67,12 @@
       <DependentUpon>Downloader.cs</DependentUpon>
     </Compile>
     <Compile Include="Hitomi.cs" />
+    <Compile Include="InformationViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InformationViewer.Designer.cs">
+      <DependentUpon>InformationViewer.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -82,6 +88,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Downloader.resx">
       <DependentUpon>Downloader.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InformationViewer.resx">
+      <DependentUpon>InformationViewer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
