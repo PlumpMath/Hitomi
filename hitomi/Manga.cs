@@ -54,7 +54,7 @@ namespace hitomi
                 client.Encoding = System.Text.Encoding.UTF8;
                 HtmlDocument doc = new HtmlDocument();
                 doc.LoadHtml(client.DownloadString(Url));
-                doc.DocumentNode.SelectNodes("//li//a[contains('href','tag')]");
+                var tags = doc.DocumentNode.SelectNodes("//ul[contains(@class, 'tags')]//li//a[contains(@href,'/tag/')]");
             }
 
             /*
