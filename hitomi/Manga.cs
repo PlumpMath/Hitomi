@@ -10,7 +10,7 @@ using HtmlAgilityPack;
 
 namespace hitomi
 {
-    public class Manga
+    public class Manga : IDisposable
     {
         public event Action<int> Downloaded;
         public string Url { get; private set; }
@@ -103,6 +103,11 @@ namespace hitomi
                     System.Windows.Forms.Application.DoEvents();
                 }
             }
+        }
+
+        public void Dispose()
+        {
+            return;
         }
     }
 }
