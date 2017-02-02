@@ -30,14 +30,14 @@
         {
             this.components = new System.ComponentModel.Container();
             this.listView1 = new System.Windows.Forms.ListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.button1 = new System.Windows.Forms.Button();
             this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.button2 = new System.Windows.Forms.Button();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.listView2 = new System.Windows.Forms.ListView();
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -60,6 +60,7 @@
             this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
             this.columnHeader2});
+            this.listView1.ContextMenuStrip = this.contextMenuStrip1;
             this.listView1.FullRowSelect = true;
             this.listView1.GridLines = true;
             this.listView1.Location = new System.Drawing.Point(10, 99);
@@ -68,6 +69,16 @@
             this.listView1.TabIndex = 0;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "이름";
+            this.columnHeader1.Width = 186;
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "번호";
+            this.columnHeader2.Width = 110;
             // 
             // button1
             // 
@@ -161,16 +172,6 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // columnHeader1
-            // 
-            this.columnHeader1.Text = "이름";
-            this.columnHeader1.Width = 186;
-            // 
-            // columnHeader2
-            // 
-            this.columnHeader2.Text = "번호";
-            this.columnHeader2.Width = 110;
-            // 
             // listView2
             // 
             this.listView2.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -250,7 +251,7 @@
             // 미리보기ToolStripMenuItem
             // 
             this.미리보기ToolStripMenuItem.Name = "미리보기ToolStripMenuItem";
-            this.미리보기ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.미리보기ToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
             this.미리보기ToolStripMenuItem.Text = "미리보기";
             // 
             // label4

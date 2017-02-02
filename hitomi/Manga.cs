@@ -54,12 +54,12 @@ namespace hitomi
                 HtmlDocument doc = new HtmlDocument();
                 doc.LoadHtml(client.DownloadString(Url));
 
-                Name = doc.DocumentNode.SelectSingleNode("//div[contains(@class, 'gallery')]//h1//a").InnerText;
-                Artist = doc.DocumentNode.SelectSingleNode("//div[contains(@class, 'gallery')]//h2//a").InnerText;
+                Name = doc.DocumentNode.SelectSingleNode("//div[contains(@class, 'gallery')]//h1//a")?.InnerText;
+                Artist = doc.DocumentNode.SelectSingleNode("//div[contains(@class, 'gallery')]//h2//a")?.InnerText;
                 //Group = doc.DocumentNode.SelectSingleNode("//div[contains(@class, 'gallery-info')]//a[contains(@href,'/group/')]");
-                Type = doc.DocumentNode.SelectSingleNode("//div[contains(@class, 'gallery-info')]//tr[2]//a").InnerText;
-                Language = doc.DocumentNode.SelectSingleNode("//div[contains(@class, 'gallery-info')]//tr[3]//a").InnerText;
-                Series = doc.DocumentNode.SelectSingleNode("//div[contains(@class, 'gallery-info')]//tr[4]//a").InnerText;
+                Type = doc.DocumentNode.SelectSingleNode("//div[contains(@class, 'gallery-info')]//tr[2]//a")?.InnerText;
+                Language = doc.DocumentNode.SelectSingleNode("//div[contains(@class, 'gallery-info')]//tr[3]//a")?.InnerText;
+                Series = doc.DocumentNode.SelectSingleNode("//div[contains(@class, 'gallery-info')]//tr[4]//a")?.InnerText;
                 Tags = (from tag in doc.DocumentNode.SelectNodes("//ul[contains(@class, 'tags')]//li//a[contains(@href,'/tag/')]")
                         select new Tag(tag.InnerText)).ToArray();
 

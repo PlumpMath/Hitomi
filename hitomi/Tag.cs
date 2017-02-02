@@ -20,7 +20,7 @@ namespace hitomi
             else if (tag.EndsWith("♂"))
                 Sex = Sex.MALE;
             else
-                throw new FormatException("Bad sex format");
+                Sex = Sex.NONE;
 
             Value = tag.TrimEnd(' ', '♀', '♂');
         }
