@@ -61,11 +61,27 @@ namespace hitomi
         public static IEnumerable<int> CrawlFromTag(string tag, string language = "all")
         {
             int max = MaxPage(MakeUrl(tag: tag, language: language));
-            for(int i = 1; i <= max; i++)
+            for (int i = 1; i <= max; i++)
             {
                 string url = MakeUrl(page: i, tag: tag, language: language);
                 foreach (int m in UrlsFromPage(url))
                     yield return m;
+            }
+        }
+
+        public static IEnumerable<Manga> CrawlFromTag(string[] include, string[] exclude, string language = "all")
+        {
+            int max = MaxPage(MakeUrl(tag: include[0], language: language));
+            for (int i = 1; i <= max; i++)
+            {
+                string url = MakeUrl(page: i, tag: include[0], language: language);
+                foreach (int j in UrlsFromPage(url))
+                {
+                    Manga m = new Manga(j);
+                    if (include.All(s => m.Tags.Contains(new Tag(s))))
+                        if (!exclude.All(s => m.Tags.Contains(new Tag(s))))
+                            yield return m;
+                }
             }
         }
 
