@@ -54,6 +54,8 @@ namespace hitomi
 
             comboBox2.SelectedIndex = 0; //태그
             comboBox1.SelectedIndex = 31; //한국어
+
+            CheckForIllegalCrossThreadCalls = false;
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -62,17 +64,6 @@ namespace hitomi
             if(f.ShowDialog() == DialogResult.OK)
             {
                 textBox2.Text = f.SelectedPath;
-            }
-        }
-
-        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
-        {
-            if(listView1.SelectedItems.Count == 1)
-            {
-                ToolStripMenuItem item = new ToolStripMenuItem("미리보기", ((Manga)listView1.SelectedItems[0].Tag).GetImages().First());
-                contextMenuStrip1.Items.Clear();
-                contextMenuStrip1.Items.Add(item);
-                contextMenuStrip1.Items[0].DisplayStyle = ToolStripItemDisplayStyle.Image;
             }
         }
 
@@ -87,30 +78,51 @@ namespace hitomi
                 list = Hitomi.CrawlFromSeries(textBox1.Text, language);
             index = 0;
 
-            foreach (int i in list.Skip(index).Take((int)numericUpDown1.Value))
-            {
-                Manga m = new Manga(i);
-                ListViewItem item = new ListViewItem(m.Name);
-                item.SubItems.Add(m.Number);
-                item.Tag = m;
-                listView1.Items.Add(item);
-            }
-
-            index += (int)numericUpDown1.Value;
+            button5_Click(null, null);
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
-            foreach (int i in list.Skip(index).Take((int)numericUpDown1.Value))
+            System.Threading.Thread t = new System.Threading.Thread(new System.Threading.ThreadStart(() =>
             {
-                Manga m = new Manga(i);
-                ListViewItem item = new ListViewItem(m.Name);
-                item.SubItems.Add(m.Number);
-                item.Tag = m;
-                listView1.Items.Add(item);
-            }
+                foreach (int i in list.Skip(index).Take((int)numericUpDown1.Value))
+                {
+                    Manga m = new Manga(i);
+                    ListViewItem item = new ListViewItem(m.Name);
+                    item.SubItems.Add(m.Number);
+                    item.Tag = m;
+                    listView1.Items.Add(item);
+                    listView1.BeginUpdate();
+                    listView1.EndUpdate();
+                }
 
-            index += (int)numericUpDown1.Value;
+                index += (int)numericUpDown1.Value;
+            }));
+
+            t.Start();
+        }
+
+        Image img;
+        private void toolTip1_Draw(object sender, DrawToolTipEventArgs e)
+        {
+            e.DrawBackground();
+            e.DrawBorder();
+
+            e.Graphics.DrawImage(img, 0, 0, img.Width * 200 / img.Height, 200);
+        }
+
+        private void listView1_MouseDown(object sender, MouseEventArgs e)
+        {
+            if(e.Button == MouseButtons.Right)
+            {
+                img = ((Manga)listView1.SelectedItems[0].Tag).GetImages().First();
+                toolTip1.Show("미리보기", listView1, e.X, e.Y, 1000);
+            }
+        }
+
+        private void toolTip1_Popup(object sender, PopupEventArgs e)
+        {
+            e.ToolTipSize = new Size(img.Width * 200 / img.Height, 200);
         }
     }
 }
